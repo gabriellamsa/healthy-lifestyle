@@ -17,13 +17,16 @@ function HabitTracker() {
     }
   }, [habits]);
 
-  const addHabit = () => {
-    if (newHabit.trim() !== "") {
-      setHabits([...habits, newHabit]);
-      setNewHabit("");
+  const addHabit = (habit) => {
+    if (habit.trim() !== "") {
+      setHabits([...habits, habit]);
     }
   };
 
+  const removeHabit = (index) => {
+    const updatedHabits = habits.filter((_, i) => i !== index);
+    setHabits(updatedHabits);
+  };
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
       <h2 className="text-xl font-bold mb-4">Track Your Habits</h2>
@@ -48,6 +51,12 @@ function HabitTracker() {
         {habits.map((habit, index) => (
           <li key={index} className="mb-2">
             {habit}
+            <button
+              onClick={() => removeHabit(index)}
+              className="text-red-400 ml-4"
+            >
+              x
+            </button>
           </li>
         ))}
       </ul>
