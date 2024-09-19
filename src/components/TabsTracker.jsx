@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FoodTracker from "./FoodTracker";
 import HabitTracker from "./HabitTracker";
 import WaterTracker from "./WaterTracker";
 
 function TabsTracker() {
-  const [activeTab, setActiveTab] = useState("habit");
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem("activeTab") || "habit";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("activeTab", activeTab);
+  }, [activeTab]);
 
   return (
     <div className="max-w-md mx-auto mt-6">

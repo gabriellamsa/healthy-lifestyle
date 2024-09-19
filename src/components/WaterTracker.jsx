@@ -10,13 +10,9 @@ function WaterTracker() {
     localStorage.setItem("waterIntake", waterIntake);
   }, [waterIntake]);
 
-  const addWater = () => {
-    setWaterIntake((prev) => prev + 1);
-  };
+  const addWater = () => setWaterIntake((prev) => prev + 1);
 
-  const resetWater = () => {
-    setWaterIntake(0);
-  };
+  const resetWater = () => setWaterIntake(0);
 
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 mt-6">
@@ -32,12 +28,11 @@ function WaterTracker() {
           Add Glass
         </button>
       </div>
-      <button
-        onClick={resetWater}
-        className="mt-4 bg-red-400 text-white px-4 py-2 rounded"
-      >
-        Reset
-      </button>
+      {waterIntake > 0 && (
+        <button onClick={resetWater} className="text-red-400 ml-4">
+          ↻
+        </button>
+      )}
     </div>
   );
 }

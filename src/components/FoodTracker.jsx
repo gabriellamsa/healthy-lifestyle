@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 
 function FoodTracker() {
   const [meals, setMeals] = useState(() => {
-    const storedMeals = JSON.parse(localStorage.getItem("meals")) || [];
-    return storedMeals;
+    const storedMeals = localStorage.getItem("meals");
+    return storedMeals ? JSON.parse(storedMeals) : [];
   });
   const [newMeal, setNewMeal] = useState("");
 
@@ -12,8 +12,8 @@ function FoodTracker() {
   }, [meals]);
 
   const addMeal = () => {
-    if (newMeal.trim() !== "") {
-      setMeals((prev) => [...prev, newMeal]);
+    if (newMeal.trim()) {
+      setMeals([...meals, newMeal]);
       setNewMeal("");
     }
   };
@@ -41,19 +41,23 @@ function FoodTracker() {
           Add Meal
         </button>
       </div>
-      <ul className="list-disc pl-5">
-        {meals.map((meal, index) => (
-          <li key={index} className="mb-2">
-            {meal}
-            <button
-              onClick={() => removeMeal(index)}
-              className="text-red-400 ml-4"
-            >
-              x
-            </button>
-          </li>
-        ))}
-      </ul>
+      {meals.length > 0 ? (
+        <ul className="list-disc pl-5">
+          {meals.map((meal, index) => (
+            <li key={index} className="mb-2 flex justify-between">
+              {meal}
+              <button
+                onClick={() => removeMeal(index)}
+                className="text-red-400 ml-4"
+              >
+                x
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-gray-500">No meals added yet.</p>
+      )}
     </div>
   );
 }
