@@ -1,14 +1,10 @@
 import React from "react";
-import HabitTracker from "../components/HabitTracker";
-import WaterTracker from "../components/WaterTracker";
-import FoodTracker from "../components/FoodTracker";
+import TabsTracker from "../components/TabsTracker";
 
 function Tracker() {
   return (
-    <div>
-      <HabitTracker />
-      <WaterTracker />
-      <FoodTracker />
+    <div className="min-h-screen bg-gray-100 p-6">
+      <TabsTracker />
     </div>
   );
 }

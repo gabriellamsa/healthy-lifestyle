@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 
 function WaterTracker() {
   const [waterIntake, setWaterIntake] = useState(() => {
-    // Carregar valor inicial do localStorage
     const storedWater = localStorage.getItem("waterIntake");
-    return storedWater ? parseInt(storedWater, 10) : 0; // Retornar 0 se não houver valor
+    return storedWater ? parseInt(storedWater, 10) : 0;
   });
 
   useEffect(() => {

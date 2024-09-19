@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 
 function FoodTracker() {
   const [meals, setMeals] = useState(() => {
-    // Carregar valor inicial do localStorage
     const storedMeals = JSON.parse(localStorage.getItem("meals")) || [];
-    return storedMeals; // Retornar array vazio se não houver valor
+    return storedMeals;
   });
   const [newMeal, setNewMeal] = useState("");
 
@@ -44,7 +43,7 @@ function FoodTracker() {
       </div>
       <ul className="list-disc pl-5">
         {meals.map((meal, index) => (
-          <li key={index} className="mb-2 flex justify-between">
+          <li key={index} className="mb-2">
             {meal}
             <button
               onClick={() => removeMeal(index)}
