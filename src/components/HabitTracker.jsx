@@ -1,21 +1,33 @@
 import React, { useState, useEffect } from "react";
 
 function HabitTracker() {
-  const [habits, setHabits] = useState(() => {
-    const storedHabits = localStorage.getItem("habits");
-    return storedHabits ? JSON.parse(storedHabits) : [];
-  });
+  const [habits, setHabits] = useState([]);
   const [newHabit, setNewHabit] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    localStorage.setItem("habits", JSON.stringify(habits));
+    const storedHabits = localStorage.getItem("habits");
+    if (storedHabits) {
+      setHabits(JSON.parse(storedHabits));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (habits.length > 0) {
+      localStorage.setItem("habits", JSON.stringify(habits));
+    } else {
+      localStorage.removeItem("habits");
+    }
   }, [habits]);
 
   const addHabit = () => {
-    if (newHabit.trim()) {
-      setHabits([...habits, newHabit]);
-      setNewHabit("");
+    if (newHabit.trim() === "") {
+      setError("The habit's name can't be empty.");
+      return;
     }
+    setHabits([...habits, newHabit]);
+    setNewHabit("");
+    setError("");
   };
 
   const removeHabit = (index) => {
@@ -41,10 +53,14 @@ function HabitTracker() {
           Add Habit
         </button>
       </div>
-      {habits.length > 0 ? (
+      {error && <p className="text-red-400">{error}</p>}
+
+      {habits.length === 0 ? (
+        <p className="text-gray-500">No habits added yet.</p>
+      ) : (
         <ul className="list-disc pl-5">
           {habits.map((habit, index) => (
-            <li key={index} className="mb-2 flex justify-between">
+            <li key={index} className="mb-2">
               {habit}
               <button
                 onClick={() => removeHabit(index)}
@@ -55,8 +71,6 @@ function HabitTracker() {
             </li>
           ))}
         </ul>
-      ) : (
-        <p className="text-gray-500">No habits added yet.</p>
       )}
     </div>
   );
