@@ -1,8 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function HabitTracker() {
   const [habits, setHabits] = useState([]);
   const [newHabit, setNewHabit] = useState("");
+
+  useEffect(() => {
+    const storedHabits = localStorage.getItem("habits");
+    if (storedHabits) {
+      setHabits(JSON.parse(storedHabits));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (habits.length > 0) {
+      localStorage.setItem("habits", JSON.stringify(habits));
+    }
+  }, [habits]);
 
   const addHabit = () => {
     if (newHabit.trim() !== "") {
