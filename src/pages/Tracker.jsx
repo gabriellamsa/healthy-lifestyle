@@ -1,10 +1,10 @@
 import React from "react";
+import HabitTracker from "../components/HabitTracker";
 
 function Tracker() {
   return (
     <div>
-      <h1>Habit Tracker</h1>
-      <p>Here you can track your healthy habits.</p>
+      <HabitTracker />
     </div>
   );
 }
