@@ -6,7 +6,10 @@ function FoodTracker() {
     return storedMeals;
   });
   const [newMeal, setNewMeal] = useState("");
-  const [error, setError] = useState("");
+  const [editIndex, setEditIndex] = useState(null);
+  const [editMeal, setEditMeal] = useState("");
+  const [statusMessage, setStatusMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     localStorage.setItem("meals", JSON.stringify(meals));
@@ -14,22 +17,44 @@ function FoodTracker() {
 
   const addMeal = () => {
     if (newMeal.trim() === "") {
-      setError("The meal name must not be empty.");
+      setErrorMessage("The field can't be empty.");
       return;
     }
     setMeals((prev) => [...prev, newMeal]);
     setNewMeal("");
-    setError("");
+    setErrorMessage("");
+    setStatusMessage("Successfully added!");
   };
 
   const removeMeal = (index) => {
     const updatedMeals = meals.filter((_, i) => i !== index);
     setMeals(updatedMeals);
+    setStatusMessage("Successfully removed!");
+  };
+
+  const startEditing = (index) => {
+    setEditIndex(index);
+    setEditMeal(meals[index]);
+  };
+
+  const saveEdit = () => {
+    if (editMeal.trim() === "") {
+      setErrorMessage("The edit field cannot be empty.");
+      return;
+    }
+    const updatedMeals = [...meals];
+    updatedMeals[editIndex] = editMeal;
+    setMeals(updatedMeals);
+    setEditIndex(null);
+    setEditMeal("");
+    setErrorMessage("");
+    setStatusMessage("Successfully edited!");
   };
 
   return (
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 mt-6">
       <h2 className="text-xl font-bold mb-4">Track Your Meals</h2>
+
       <div className="flex mb-4">
         <input
           type="text"
@@ -45,20 +70,55 @@ function FoodTracker() {
           Add Meal
         </button>
       </div>
-      {error && <p className="text-red-400">{error}</p>}
+
+      {errorMessage && <p className="text-red-500 mb-2">{errorMessage}</p>}
+
+      {statusMessage && (
+        <p className="text-emerald-500 text-center mb-4">{statusMessage}</p>
+      )}
+
       {meals.length === 0 ? (
-        <p className="text-gray-500">No meals added yet.</p>
+        <p className="text-gray-500">Your meals are empty.</p>
       ) : (
         <ul className="list-disc pl-5">
           {meals.map((meal, index) => (
             <li key={index} className="mb-2">
-              {meal}
-              <button
-                onClick={() => removeMeal(index)}
-                className="text-red-400 ml-4"
-              >
-                x
-              </button>
+              <div className="flex justify-between">
+                {editIndex === index ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editMeal}
+                      onChange={(e) => setEditMeal(e.target.value)}
+                      className="border border-gray-300 p-2 rounded"
+                    />
+                    <button
+                      onClick={saveEdit}
+                      className="text-emerald-500 ml-4"
+                    >
+                      Save
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <span>{meal}</span>
+                    <div>
+                      <button
+                        onClick={() => startEditing(index)}
+                        className="text-emerald-500 mr-4"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => removeMeal(index)}
+                        className="text-red-400"
+                      >
+                        x
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             </li>
           ))}
         </ul>
