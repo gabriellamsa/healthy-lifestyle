@@ -12,6 +12,9 @@ function WaterTracker() {
 
   const addWater = () => setWaterIntake((prev) => prev + 1);
 
+  const addWater250ml = () => setWaterIntake((prev) => prev + 250);
+  const addWater500ml = () => setWaterIntake((prev) => prev + 500);
+
   const resetWater = () => setWaterIntake(0);
 
   return (
@@ -19,15 +22,25 @@ function WaterTracker() {
       <h2 className="text-xl font-bold mb-4">Track Your Water Intake</h2>
       <div className="flex items-center justify-between">
         <p className="text-lg">
-          You have drunk {waterIntake} glasses of water today.
+          You have drunk {waterIntake}ml of water today.
         </p>
+      </div>
+
+      <div className="flex mt-4">
         <button
-          onClick={addWater}
+          onClick={addWater250ml}
+          className="bg-emerald-500 text-white px-4 py-2 rounded mr-2"
+        >
+          Add 250ml
+        </button>
+        <button
+          onClick={addWater500ml}
           className="bg-emerald-500 text-white px-4 py-2 rounded"
         >
-          Add Glass
+          Add 500ml
         </button>
       </div>
+
       {waterIntake > 0 && (
         <button onClick={resetWater} className="text-red-400 ml-4">
           ↻

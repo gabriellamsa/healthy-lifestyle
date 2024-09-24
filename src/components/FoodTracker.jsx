@@ -6,8 +6,10 @@ function FoodTracker() {
     return storedMeals;
   });
   const [newMeal, setNewMeal] = useState("");
+  const [newCalories, setNewCalories] = useState(""); // Novo estado para as calorias
   const [editIndex, setEditIndex] = useState(null);
   const [editMeal, setEditMeal] = useState("");
+  const [editCalories, setEditCalories] = useState(""); // Novo estado para as calorias editáveis
   const [statusMessage, setStatusMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -16,12 +18,14 @@ function FoodTracker() {
   }, [meals]);
 
   const addMeal = () => {
-    if (newMeal.trim() === "") {
-      setErrorMessage("The field can't be empty.");
+    if (newMeal.trim() === "" || newCalories.trim() === "") {
+      setErrorMessage("The fields can't be empty.");
       return;
     }
-    setMeals((prev) => [...prev, newMeal]);
+    const mealData = { name: newMeal, calories: Number(newCalories) }; // Objeto de alimento com calorias
+    setMeals((prev) => [...prev, mealData]);
     setNewMeal("");
+    setNewCalories(""); // Limpa o campo de calorias
     setErrorMessage("");
     setStatusMessage("Successfully added!");
   };
@@ -34,19 +38,24 @@ function FoodTracker() {
 
   const startEditing = (index) => {
     setEditIndex(index);
-    setEditMeal(meals[index]);
+    setEditMeal(meals[index].name);
+    setEditCalories(meals[index].calories); // Captura as calorias do alimento editado
   };
 
   const saveEdit = () => {
-    if (editMeal.trim() === "") {
-      setErrorMessage("The edit field cannot be empty.");
+    if (editMeal.trim() === "" || editCalories.trim() === "") {
+      setErrorMessage("The edit fields cannot be empty.");
       return;
     }
     const updatedMeals = [...meals];
-    updatedMeals[editIndex] = editMeal;
+    updatedMeals[editIndex] = {
+      name: editMeal,
+      calories: Number(editCalories),
+    }; // Atualiza o alimento com nome e calorias
     setMeals(updatedMeals);
     setEditIndex(null);
     setEditMeal("");
+    setEditCalories(""); // Limpa o campo de calorias ao salvar
     setErrorMessage("");
     setStatusMessage("Successfully edited!");
   };
@@ -61,6 +70,13 @@ function FoodTracker() {
           value={newMeal}
           onChange={(e) => setNewMeal(e.target.value)}
           placeholder="Enter a meal"
+          className="border border-gray-300 p-2 rounded-l w-full"
+        />
+        <input
+          type="number"
+          value={newCalories}
+          onChange={(e) => setNewCalories(e.target.value)} // Atualiza o estado de calorias
+          placeholder="Enter calories"
           className="border border-gray-300 p-2 rounded-l w-full"
         />
         <button
@@ -92,6 +108,12 @@ function FoodTracker() {
                       onChange={(e) => setEditMeal(e.target.value)}
                       className="border border-gray-300 p-2 rounded"
                     />
+                    <input
+                      type="number"
+                      value={editCalories}
+                      onChange={(e) => setEditCalories(e.target.value)} // Atualiza o estado de calorias ao editar
+                      className="border border-gray-300 p-2 rounded ml-2"
+                    />
                     <button
                       onClick={saveEdit}
                       className="text-emerald-500 ml-4"
@@ -101,7 +123,10 @@ function FoodTracker() {
                   </>
                 ) : (
                   <>
-                    <span>{meal}</span>
+                    <span>
+                      {meal.name} - {meal.calories} calories
+                    </span>{" "}
+                    {/* Exibe o nome e as calorias do alimento */}
                     <div>
                       <button
                         onClick={() => startEditing(index)}
